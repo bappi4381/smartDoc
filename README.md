@@ -58,3 +58,18 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 "# smartDoc" 
+
+## SmartDoc Modules
+
+### Diagnostic Center Selection
+
+- Browse active diagnostic centers with rich metadata (ratings, contact, specialization).
+- Filter by search keywords, city, specialization, and optional distance when location access is granted.
+- Sort by name, rating, distance, or real-time availability to quickly locate the best match.
+- Persist a single center selection in the patient session and redirect to the symptom intake workflow.
+
+Run the feature tests to validate the workflow:
+
+```
+php artisan test --filter=DiagnosticCenterSelectionTest
+```

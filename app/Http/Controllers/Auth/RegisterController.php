@@ -26,8 +26,8 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('verification.notice')
-            ->with('status', 'Registration successful. Please verify your email address to continue.');
+        return redirect()->route('dashboard')
+            ->with('status', 'Registration successful. Welcome to SmartDoc!');
     }
 }
 

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\DiagnosticCenter;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -33,5 +34,7 @@ class DatabaseSeeder extends Seeder
             'emergency_contact_phone' => '01700000001',
             'profile_completed_at' => now(),
         ]);
+
+        DiagnosticCenter::factory()->count(15)->create();
     }
 }
