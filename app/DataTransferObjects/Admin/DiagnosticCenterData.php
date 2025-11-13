@@ -28,6 +28,20 @@ final class DiagnosticCenterData
      */
     public static function fromArray(array $payload): self
     {
+        $rawSpecializations = $payload['specializations'] ?? [];
+
+        if (is_string($rawSpecializations)) {
+            $rawSpecializations = explode(',', $rawSpecializations);
+        } elseif (is_array($rawSpecializations) && count($rawSpecializations) === 1 && is_string($rawSpecializations[0]) && str_contains($rawSpecializations[0], ',')) {
+            $rawSpecializations = explode(',', $rawSpecializations[0]);
+        }
+
+        $specializations = collect($rawSpecializations)
+            ->map(fn ($value) => trim((string) $value))
+            ->filter()
+            ->values()
+            ->all();
+
         return new self(
             name: $payload['name'],
             slug: $payload['slug'] ?? null,
@@ -41,7 +55,7 @@ final class DiagnosticCenterData
             country: $payload['country'] ?? 'Bangladesh',
             latitude: isset($payload['latitude']) ? (float) $payload['latitude'] : null,
             longitude: isset($payload['longitude']) ? (float) $payload['longitude'] : null,
-            specializations: array_values(array_filter($payload['specializations'] ?? [])),
+            specializations: $specializations,
             isActive: (bool) ($payload['is_active'] ?? true),
             hasAvailableSlots: (bool) ($payload['has_available_slots'] ?? true),
         );

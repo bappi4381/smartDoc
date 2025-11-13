@@ -77,5 +77,13 @@ class DoctorRepository implements DoctorRepositoryInterface
             ->orderBy('user_id')
             ->get();
     }
+
+    public function allWithUser(): EloquentCollection
+    {
+        return Doctor::query()
+            ->with('user')
+            ->orderBy('user_id')
+            ->get();
+    }
 }
 

@@ -110,6 +110,11 @@ class AdminDoctorService
         return $this->doctorRepository->listByDiagnosticCenter($diagnosticCenterId)->load(['user']);
     }
 
+    public function allWithUser(): EloquentCollection
+    {
+        return $this->doctorRepository->allWithUser()->load(['user', 'diagnosticCenter']);
+    }
+
     protected function assertDiagnosticCenterExists(int $diagnosticCenterId): void
     {
         if ($this->diagnosticCenterRepository->find($diagnosticCenterId) === null) {
