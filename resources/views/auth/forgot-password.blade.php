@@ -1,26 +1,24 @@
 @extends('layouts.auth')
 
+@section('badge', 'Account Recovery')
 @section('title', 'Reset password · '.config('app.name', 'SmartDoc'))
 @section('heading', 'Let’s get you back in')
-@section('subheading', 'Enter your email and we will send a secure link to restore access.')
+@section('subheading', 'Enter your email and we’ll send a secure recovery link.')
 
 @section('content')
-    <form method="POST" action="{{ route('password.email') }}" class="space-y-7">
+    <form method="POST" action="{{ route('password.email') }}" class="needs-validation" novalidate>
         @csrf
-        <div class="space-y-3 rounded-2xl border border-emerald-100 bg-emerald-50/80 px-4 py-3 text-sm text-emerald-700">
-            <div class="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span class="font-semibold">Security tip</span>
-            </div>
-            <p class="text-xs leading-relaxed text-emerald-600">
-                We’ll email you a one-time recovery link. It expires in 30 minutes and can only be used once.
+        <div class="rounded-4 border border-warning-subtle bg-warning-subtle bg-opacity-25 p-4 mb-4">
+            <h6 class="fw-semibold text-warning mb-2">
+                <i class="bi bi-shield-lock-fill me-2"></i>Security reminder
+            </h6>
+            <p class="small text-warning mb-0">
+                We’ll email a one-time recovery link to <strong>{{ old('email') ?: 'your account email' }}</strong>. It expires within 30 minutes and can only be used once.
             </p>
         </div>
 
-        <div class="space-y-2">
-            <label for="email" class="text-sm font-medium text-slate-700">Email address</label>
+        <div class="mb-4">
+            <label for="email" class="form-label fw-semibold text-secondary">Email address</label>
             <input
                 id="email"
                 type="email"
@@ -29,23 +27,21 @@
                 required
                 autofocus
                 autocomplete="email"
-                class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/20"
+                class="form-control form-control-lg rounded-3 @error('email') is-invalid @enderror"
                 placeholder="you@email.com"
             >
-            @error('email')
-                <p class="text-xs font-medium text-rose-500">{{ $message }}</p>
-            @enderror
+            <div class="invalid-feedback">
+                @error('email') {{ $message }} @else Please enter the email associated with your account. @enderror
+            </div>
         </div>
 
-        <div class="space-y-3">
-            <button type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-200/60 transition hover:bg-emerald-600 focus:outline-none focus:ring-4 focus:ring-emerald-500/30">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 12H8m8 0l-3-3m3 3l-3 3" />
-                </svg>
+        <div class="d-grid gap-3">
+            <button type="submit" class="btn btn-primary btn-lg rounded-4">
+                <i class="bi bi-envelope-arrow-up me-2"></i>
                 Email password reset link
             </button>
-            <p class="text-center text-xs text-slate-400">
-                Need help? <a href="mailto:support@smartdoc.health" class="font-medium text-emerald-600 hover:text-emerald-500">Contact SmartDoc support</a>
+            <p class="text-center text-muted small mb-0">
+                Need assistance? <a href="mailto:support@smartdoc.health" class="fw-semibold text-decoration-none text-primary">Contact SmartDoc support</a>
             </p>
         </div>
     </form>
@@ -53,6 +49,6 @@
 
 @section('footer')
     Remembered your password?
-    <a href="{{ route('login') }}" class="font-semibold text-emerald-600 transition hover:text-emerald-500">Back to sign in</a>
+    <a href="{{ route('login') }}" class="fw-semibold text-decoration-none text-primary">Back to sign in</a>
 @endsection
 
