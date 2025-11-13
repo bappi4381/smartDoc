@@ -19,5 +19,7 @@ interface DoctorRepositoryInterface
     public function delete(Doctor $doctor): void;
 
     public function listByDiagnosticCenter(int $diagnosticCenterId): \Illuminate\Database\Eloquent\Collection;
+
+    public function allWithUser(): \Illuminate\Database\Eloquent\Collection;
 }
 

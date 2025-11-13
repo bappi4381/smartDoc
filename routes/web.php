@@ -7,6 +7,11 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Admin\AppointmentController as AdminAppointmentController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\DiagnosticCenterController as AdminDiagnosticCenterController;
+use App\Http\Controllers\Admin\DoctorController as AdminDoctorController;
+use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
 use App\Http\Controllers\Doctor\AppointmentController as DoctorAppointmentController;
 use App\Http\Controllers\Doctor\DashboardController as DoctorDashboardController;
 use App\Http\Controllers\Doctor\DiagnosisController;
@@ -15,7 +20,7 @@ use App\Http\Controllers\Patient\DiagnosticCenterController;
 use App\Http\Controllers\Patient\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome')->name('home');
+Route::redirect('/', '/login')->name('home');
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisterController::class, 'create'])->name('register');
@@ -56,4 +61,23 @@ Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->g
     Route::get('appointments/{appointment}', [DoctorAppointmentController::class, 'show'])->name('appointments.show');
     Route::post('appointments/{appointment}/diagnosis', [DiagnosisController::class, 'store'])->name('appointments.diagnosis.store');
     Route::post('diagnoses/{diagnosis}/prescriptions', [PrescriptionController::class, 'store'])->name('diagnoses.prescriptions.store');
+});
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('dashboard', AdminDashboardController::class)->name('dashboard');
+
+    Route::resource('centers', AdminDiagnosticCenterController::class);
+    Route::resource('doctors', AdminDoctorController::class)->except(['show']);
+    Route::post('doctors/{doctor}/assign', [AdminDoctorController::class, 'assign'])->name('doctors.assign');
+
+    Route::get('appointments', [AdminAppointmentController::class, 'index'])->name('appointments.index');
+    Route::get('appointments/{appointment}', [AdminAppointmentController::class, 'show'])->name('appointments.show');
+    Route::post('appointments/{appointment}/status', [AdminAppointmentController::class, 'updateStatus'])->name('appointments.status');
+    Route::post('appointments/{appointment}/reschedule', [AdminAppointmentController::class, 'reschedule'])->name('appointments.reschedule');
+    Route::post('appointments/{appointment}/reassign', [AdminAppointmentController::class, 'reassign'])->name('appointments.reassign');
+
+    Route::get('notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
+    Route::post('notifications/broadcast', [AdminNotificationController::class, 'broadcast'])->name('notifications.broadcast');
+    Route::post('notifications/read', [AdminNotificationController::class, 'markRead'])->name('notifications.read');
+    Route::post('notifications/delete', [AdminNotificationController::class, 'destroy'])->name('notifications.destroy');
 });

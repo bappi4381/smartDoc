@@ -24,6 +24,10 @@ class LoginController extends Controller
 
         $user = $request->user()->loadMissing('patient');
 
+        if ($user->role === 'admin') {
+            return redirect()->intended(route('admin.dashboard'))->with('status', 'Welcome back, admin!');
+        }
+
         if ($user->role === 'patient') {
             if ($user->patient && ! $user->patient->hasCompletedProfile()) {
                 return redirect()
