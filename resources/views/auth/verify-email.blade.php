@@ -1,45 +1,39 @@
 @extends('layouts.auth')
 
+@section('badge', 'Verification Required')
 @section('title', 'Verify your email · '.config('app.name', 'SmartDoc'))
 @section('heading', 'Secure your SmartDoc account')
-@section('subheading', 'Confirm your email so we know it’s really you.')
+@section('subheading', 'Confirm your email address to start using all SmartDoc services.')
 
 @section('content')
-    <div class="space-y-6 text-sm text-slate-600">
-        <div class="space-y-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-emerald-700">
-            <div class="flex items-center gap-2 font-semibold">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 12H8m8 0l-3-3m3 3l-3 3" />
-                </svg>
-                Action required: verify your email
-            </div>
-            <p class="text-xs leading-relaxed">
-                We sent a verification link to <span class="font-semibold text-emerald-800">{{ auth()->user()->email }}</span>.
-                Click the link in your inbox to activate your account. The link expires in 60 minutes.
+    <div class="text-muted">
+        <div class="rounded-4 border border-primary-subtle bg-primary-subtle bg-opacity-25 p-4 mb-4">
+            <h6 class="fw-semibold text-primary mb-2">
+                <i class="bi bi-envelope-check me-2"></i>Action required: verify your email
+            </h6>
+            <p class="small text-primary mb-2">
+                We sent a secure link to <strong>{{ auth()->user()->email }}</strong>. Please click the link in your inbox to activate your account. The verification link expires in 60 minutes.
+            </p>
+            <p class="small mb-0 text-primary">
+                Didn’t receive anything? Check your spam folder or request a new link below.
             </p>
         </div>
 
-        <p class="leading-relaxed">
-            Verifying your email helps keep your medical records, prescriptions, and appointment updates secure. If you don’t see the message, check your spam folder or resend the email below.
-        </p>
-
-        <div class="space-y-4">
-            <form method="POST" action="{{ route('verification.send') }}" class="space-y-2">
+        <div class="d-grid gap-3">
+            <form method="POST" action="{{ route('verification.send') }}">
                 @csrf
-                <button type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-200/60 transition hover:bg-emerald-600 focus:outline-none focus:ring-4 focus:ring-emerald-500/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9M4 20v-5h.582m15.356-2a8.003 8.003 0 01-15.356 2" />
-                    </svg>
+                <button type="submit" class="btn btn-primary btn-lg w-100 rounded-4">
+                    <i class="bi bi-arrow-repeat me-2"></i>
                     Resend verification email
                 </button>
-                <p class="text-center text-xs text-slate-400">
-                    Need assistance? <a href="mailto:support@smartdoc.health" class="font-medium text-emerald-600 hover:text-emerald-500">Contact SmartDoc support</a>
-                </p>
             </form>
-
-            <form method="POST" action="{{ route('logout') }}" class="text-center text-xs text-slate-500">
+            <p class="text-center small mb-0">
+                Need help? <a href="mailto:support@smartdoc.health" class="fw-semibold text-decoration-none text-primary">Contact SmartDoc support</a>
+            </p>
+            <form method="POST" action="{{ route('logout') }}" class="text-center">
                 @csrf
-                <button type="submit" class="font-semibold text-emerald-600 transition hover:text-emerald-500">
+                <button type="submit" class="btn btn-link text-decoration-none text-danger small fw-semibold">
+                    <i class="bi bi-box-arrow-left me-1"></i>
                     Log out and use a different email
                 </button>
             </form>
