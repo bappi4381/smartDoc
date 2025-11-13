@@ -5,55 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>@yield('title', config('app.name', 'SmartDoc'))</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-        <style>
-            :root {
-                color-scheme: light;
-            }
-
-            .auth-wrapper {
-                background: #f4f6fb;
-            }
-
-            .auth-hero {
-                background: radial-gradient(circle at top left, rgba(22, 201, 154, 0.25), transparent 60%),
-                    radial-gradient(circle at bottom right, rgba(22, 201, 154, 0.3), transparent 65%),
-                    linear-gradient(135deg, #0f766e 0%, #111827 100%);
-                color: #ffffff;
-            }
-
-            .auth-hero .badge {
-                background-color: rgba(255, 255, 255, 0.15);
-                letter-spacing: 0.25em;
-            }
-
-            .auth-card {
-                border: none;
-                border-radius: 1.5rem;
-                box-shadow: 0 30px 60px -25px rgba(15, 118, 110, 0.25);
-                backdrop-filter: blur(12px);
-            }
-
-            .auth-card .form-control {
-                border-radius: 1rem;
-                padding: 0.75rem 1rem;
-            }
-
-            .auth-card .form-control:focus {
-                box-shadow: 0 0 0 0.25rem rgba(15, 118, 110, 0.15);
-                border-color: #0f766e;
-            }
-
-            .auth-card .btn-primary {
-                background: linear-gradient(135deg, #0f766e, #14b8a6);
-                border: none;
-            }
-
-            .auth-card .btn-primary:hover {
-                background: linear-gradient(135deg, #115e59, #0f766e);
-            }
-        </style>
     </head>
     <body class="auth-wrapper">
         <div class="d-flex flex-column flex-lg-row min-vh-100">
@@ -128,7 +79,6 @@
             </main>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         @stack('scripts')
     </body>
 </html>
