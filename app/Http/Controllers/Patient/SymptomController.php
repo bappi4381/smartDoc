@@ -59,6 +59,11 @@ class SymptomController extends Controller
         }
 
         session()->flash('status', __('AI analysis complete. Review the recommendations below.'));
+        session()->put('patient.ai_recommendations', [
+            'specializations' => $result->recommendedSpecializations,
+            'primary_prediction' => $result->primaryPrediction->label,
+            'generated_at' => now()->toIso8601String(),
+        ]);
 
         return $this->renderForm(
             analysisResult: $result,

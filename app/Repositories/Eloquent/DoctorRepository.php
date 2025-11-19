@@ -7,6 +7,7 @@ use App\Repositories\Contracts\DoctorRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class DoctorRepository implements DoctorRepositoryInterface
 {
@@ -105,6 +106,89 @@ class DoctorRepository implements DoctorRepositoryInterface
             ->orderByDesc('experience_years')
             ->limit($limit)
             ->get();
+    }
+
+    public function searchForPatient(
+        int $diagnosticCenterId,
+        array $filters,
+        int $perPage = 9
+    ): LengthAwarePaginator {
+        $query = Doctor::query()
+            ->with('user')
+            ->where('diagnostic_center_id', $diagnosticCenterId)
+            ->where('is_active', true)
+            ->withCount(['appointments as upcoming_appointments_count' => function ($builder) {
+                $builder->whereIn('status', ['pending', 'confirmed'])
+                    ->where('scheduled_at', '>=', now());
+            }])
+            ->withMin(['appointments as next_available_slot' => function ($builder) {
+                $builder->whereIn('status', ['pending', 'confirmed'])
+                    ->where('scheduled_at', '>=', now());
+            }], 'scheduled_at');
+
+        if ($specialization = Arr::get($filters, 'specialization')) {
+            $query->where('specialization', 'like', '%' . (string) Str::of($specialization)->trim() . '%');
+        }
+
+        if ($minRating = Arr::get($filters, 'min_rating')) {
+            $query->where('rating', '>=', (float) $minRating);
+        }
+
+        if ($minFee = Arr::get($filters, 'min_fee')) {
+            $query->where('consultation_fee', '>=', (float) $minFee);
+        }
+
+        if ($maxFee = Arr::get($filters, 'max_fee')) {
+            $query->where('consultation_fee', '<=', (float) $maxFee);
+        }
+
+        $recommendedSpecializations = (array) Arr::get($filters, 'recommended_specializations', []);
+
+        if (Arr::get($filters, 'only_recommended') && ! empty($recommendedSpecializations)) {
+            $query->whereIn('specialization', $recommendedSpecializations);
+        }
+
+        $availabilityFilter = Arr::get($filters, 'availability');
+        $comfortable = config('medical.doctor_availability.comfortable_load', 6);
+        $maximum = config('medical.doctor_availability.maximum_load', 12);
+
+        if ($availabilityFilter === 'available_now') {
+            $query->having('upcoming_appointments_count', '<=', $comfortable);
+        } elseif ($availabilityFilter === 'limited') {
+            $query->havingBetween('upcoming_appointments_count', [$comfortable + 1, $maximum]);
+        }
+
+        $sort = Arr::get($filters, 'sort', 'recommended');
+        switch ($sort) {
+            case 'rating':
+                $query->orderByDesc('rating')->orderByDesc('rating_count');
+                break;
+            case 'experience':
+                $query->orderByDesc('experience_years')->orderByDesc('rating');
+                break;
+            case 'fee_low_high':
+                $query->orderBy('consultation_fee')->orderByDesc('rating');
+                break;
+            case 'fee_high_low':
+                $query->orderByDesc('consultation_fee')->orderByDesc('rating');
+                break;
+            case 'availability':
+                $query->orderBy('upcoming_appointments_count')->orderBy('next_available_slot');
+                break;
+            case 'recommended':
+            default:
+                if (! empty($recommendedSpecializations)) {
+                    $placeholders = implode(', ', array_fill(0, count($recommendedSpecializations), '?'));
+                    $query->orderByRaw(
+                        "CASE WHEN specialization IN ($placeholders) THEN 0 ELSE 1 END",
+                        $recommendedSpecializations
+                    );
+                }
+                $query->orderByDesc('rating')->orderByDesc('experience_years');
+                break;
+        }
+
+        return $query->paginate($perPage)->withQueryString();
     }
 }
 
