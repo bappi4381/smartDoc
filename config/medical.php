@@ -50,5 +50,10 @@ return [
     'doctor_recommendations' => [
         'limit' => 3,
     ],
+
+    'doctor_availability' => [
+        'comfortable_load' => 6,
+        'maximum_load' => 12,
+    ],
 ];
 

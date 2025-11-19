@@ -17,6 +17,7 @@ use App\Http\Controllers\Doctor\DashboardController as DoctorDashboardController
 use App\Http\Controllers\Doctor\DiagnosisController;
 use App\Http\Controllers\Doctor\PrescriptionController;
 use App\Http\Controllers\Patient\DiagnosticCenterController;
+use App\Http\Controllers\Patient\DoctorController as PatientDoctorController;
 use App\Http\Controllers\Patient\ProfileController;
 use App\Http\Controllers\Patient\SymptomController;
 use Illuminate\Support\Facades\Route;
@@ -55,6 +56,8 @@ Route::middleware(['auth', 'profile.complete'])->group(function () {
         ->name('patient.symptoms.create');
     Route::post('patient/symptoms', [SymptomController::class, 'store'])
         ->name('patient.symptoms.store');
+    Route::get('patient/doctors', [PatientDoctorController::class, 'index'])
+        ->name('patient.doctors.index');
 });
 
 Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->group(function () {

@@ -233,6 +233,14 @@
                             </div>
                         @endforelse
                     </div>
+                    <div class="mt-5">
+                        <a href="{{ route('patient.doctors.index') }}" class="inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600">
+                            Browse full doctor list
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             @else
                 <div class="rounded-2xl border border-dashed border-slate-200 bg-white/90 p-6 text-center text-sm text-slate-500">

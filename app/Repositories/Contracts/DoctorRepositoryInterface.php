@@ -30,5 +30,11 @@ interface DoctorRepositoryInterface
         array $specializations,
         int $limit = 3
     ): \Illuminate\Database\Eloquent\Collection;
+
+    public function searchForPatient(
+        int $diagnosticCenterId,
+        array $filters,
+        int $perPage = 9
+    ): \Illuminate\Contracts\Pagination\LengthAwarePaginator;
 }
 
